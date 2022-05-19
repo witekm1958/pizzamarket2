@@ -3,11 +3,16 @@ package pl.wszib.pizzamarket2.web.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.wszib.pizzamarket2.data.entities.PizzaEntity;
 import pl.wszib.pizzamarket2.data.repositories.PizzaRepository;
+import pl.wszib.pizzamarket2.web.models.OrderAddressModel;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("menu")
@@ -26,6 +31,14 @@ public class MenuController {
         return "menuPage";
     }
 
-
+    @GetMapping("order/{pizzaId}")
+    public String showPizzaOrderPage(
+            @PathVariable Long pizzaId,
+            @ModelAttribute("orderAddress") OrderAddressModel orderAddress,
+            Model model) {
+        PizzaEntity pizza = pizzaRepository.findById(pizzaId).orElseThrow(EntityNotFoundException::new);
+        model.addAttribute("pizza", pizza);
+        return "orderPizzaPage";
+    }
 
 }
