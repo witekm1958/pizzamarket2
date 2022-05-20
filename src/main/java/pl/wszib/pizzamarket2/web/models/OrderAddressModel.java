@@ -1,13 +1,19 @@
 package pl.wszib.pizzamarket2.web.models;
 
 import javax.persistence.Column;
+import javax.validation.constraints.Size;
 
 public class OrderAddressModel {
+    @Size(min = 2, max = 15)
     private String firstName;
+    @Size(min = 2, max = 15)
     private String lastName;
+    @Size(min = 2, max = 30)
     private String street;
+    @Size(min = 6, max = 6)
     private String postalCode;
-
+    @Size(min = 2, max = 15)
+    private String city;
     public String getFirstName() {
         return firstName;
     }
@@ -48,5 +54,5 @@ public class OrderAddressModel {
         this.city = city;
     }
 
-    private String city;
+
 }

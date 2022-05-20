@@ -2,26 +2,27 @@ package pl.wszib.pizzamarket2.web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import pl.wszib.pizzamarket2.data.entities.PizzaEntity;
 import pl.wszib.pizzamarket2.data.repositories.PizzaRepository;
+import pl.wszib.pizzamarket2.services.OrderService;
 import pl.wszib.pizzamarket2.web.models.OrderAddressModel;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("menu")
 public class MenuController {
 
     private final PizzaRepository pizzaRepository;
+    private final OrderService orderService;
 
-    public MenuController(PizzaRepository pizzaRepository) {
+    public MenuController(PizzaRepository pizzaRepository, OrderService orderService) {
         this.pizzaRepository = pizzaRepository;
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -39,6 +40,23 @@ public class MenuController {
         PizzaEntity pizza = pizzaRepository.findById(pizzaId).orElseThrow(EntityNotFoundException::new);
         model.addAttribute("pizza", pizza);
         return "orderPizzaPage";
+    }
+
+    @PostMapping("order/{pizzaId}")
+    public String processPizzaOrder(
+            @PathVariable Long pizzaId,
+            @ModelAttribute("orderAddress") @Valid OrderAddressModel orderAddress,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            PizzaEntity pizza = pizzaRepository.findById(pizzaId).orElseThrow(EntityNotFoundException::new);
+            model.addAttribute("pizza", pizza);
+            return "orderPizzaPage";
+        }
+        orderService.saveOrder(pizzaId, orderAddress);
+
+        return "redirect:/menu";
     }
 
 }
