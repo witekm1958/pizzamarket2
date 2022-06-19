@@ -17,8 +17,8 @@ public class PizzaEntity {
     private BigDecimal price;
     @ManyToMany
     @JoinTable(name = "pizza_ingredients", joinColumns = @JoinColumn(name = "pizza_id"),
-    inverseJoinColumns = @JoinColumn())
-    private Set<IngredientEntity> ingredient;
+    inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    private Set<IngredientEntity> ingredients;
 
     public Long getId() {
         return id;
@@ -45,10 +45,10 @@ public class PizzaEntity {
     }
 
     public Set<IngredientEntity> getIngredients() {
-        return ingredient;
+        return ingredients;
     }
 
     public void setIngredients(Set<IngredientEntity> ingredients) {
-        this.ingredient = ingredients;
+        this.ingredients = ingredients;
     }
 }

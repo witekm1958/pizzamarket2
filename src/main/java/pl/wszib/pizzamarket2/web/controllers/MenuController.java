@@ -56,7 +56,7 @@ public class MenuController {
         }
         orderService.saveOrder(pizzaId, orderAddress);
 
-        return "redirect:/menu";
+        return "redirect:/confirmation";
     }
 
 }

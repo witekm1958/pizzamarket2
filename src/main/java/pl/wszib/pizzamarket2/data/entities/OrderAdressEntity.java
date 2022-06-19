@@ -67,4 +67,8 @@ public class OrderAdressEntity {
     public void setStreet(String street) {
         this.street = street;
     }
+
+    public String getNameAndSurname() {
+        return (firstName + " " + lastName );
+    }
 }
